@@ -2,64 +2,93 @@
 
 A simple [BattleSnake AI](http://battlesnake.io) written for NodeJS.
 
-To get started you'll need a working NodeJS development environment, and at least read the Heroku docs on [deploying a NodeJS app](https://devcenter.heroku.com/articles/getting-started-with-nodejs).
+To get started you'll need a working NodeJS development environment, and at least read the Heroku docs on [deploying a NodeJS app](https://devcenter.heroku.com/articles/getting-started-with-nodejs). This client uses [Express4](http://expressjs.com/en/4x/api.html) for easy route management, read up on the docs to learn more about reading incoming JSON params, writing responses, etc.
+
+
+## Prerequisite Software
+You'll need the follwing software on your computer before you can get started:
+- [GitHub CLI 2.x](https://git-scm.com/downloads)
+- [Heroku CLI 5.x](https://cli.heroku.com/).
+
+You'll need the following software on your computer if you want to compile and run the application locally. This is completely optional but probably desired since troubleshooting coding errors and testing behaviour will be much easier. 
+- [NodeJs 6.x or 7.x](https://nodejs.org/)
+- [NPM 3.x](https://www.npmjs.com/get-npm) - This is installed with NodeJS
 
 If you haven't setup a NodeJS development environment before, read [how to get started with NodeJS](http://nodejs.org/documentation/tutorials/). You'll also need [npm](https://www.npmjs.com/) for easy JS dependency management.
 
-This client uses [Express4](http://expressjs.com/en/4x/api.html) for easy route management, read up on the docs to learn more about reading incoming JSON params, writing responses, etc.
+If you have the software installed already, confirm by running the respective commands on the command prompt and check the versions:
+- ```npm -v```
+- ```node -v```
+- ```git --version```
+- ```heroku --version```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+## Preparing your project
+You'll also need the (free) accounts from the following services:
+- Create a free account on [Heroku](https://www.heroku.com/)
+- Create a free [GitHub account](https://github.com)
+- Sign in to GitHub and Fork this [project](https://github.com/xmatters-tko/xm-battlesnake-nodejs/fork)
 
+## Test Your Environment Setup
+At this point, make sure that all of you software is installed, and you've forked this project correctly. Run the following commands:
 
-### Running the AI locally
-
-Fork and clone this repo:
-
-```
-git clone git@github.com:xmatters-tko/battlesnake-nodejs.git
-cd battlesnake-nodejs
-```
-
-Install the client dependencies:
-
-```
-npm install
-```
-
-Create an `.env` file in the root of the project and add your environment variables (optional).
-
-Run the server:
-
-```
-nf start web
+```sh
+$ git clone https://github.com/<your account>/xm-battlesnake-nodejs.git
+$ cd xm-battlesnake-nodejs
+$ heroku local
 ```
 
-Test the client in your browser: [http://localhost:5000](http://localhost:5000)
+Your app should now be running on [localhost:5000/health](http://localhost:5000/health).
 
+### Testing your local app
+You can use curl commands to easily test if you snake is working and responding to end points.
 
-### Deploying to Heroku
-
-Click the Deploy to Heroku button at the top or use the command line commands below.
-
-Create a new NodeJS Heroku app:
-
+Run it locally using heroku command:
 ```
-heroku create [APP_NAME]
+$ heroku local
 ```
 
-Push code to Heroku servers:
+#### /start Endpoint
 ```
-git push heroku master
-```
-
-Open Heroku app in browser:
-```
-heroku open
+$ curl localhost:5000/start -X POST -H "Content-Type: application/json" -d '{"width":20,"height":20,"game_id":"example-game-id"}'
 ```
 
-Or go directly via http://APP_NAME.herokuapp.com
+#### /move Endpoint
+```
+$ curl localhost:5000/move -X POST -H "Content-Type: application/json" -d '{ "you": "2c4d4d70-8cca-48e0-ac9d-03ecafca0c98","width": 2,"turn": 0,"snakes": [{ "taunt": "git gud","name": "my-snake","id": "2c4d4d70-8cca-48e0-ac9d-03ecafca0c98","health_points": 93,"coords": [[0,0],[0,0],[0,0]] },{ "taunt": "gotta go fast","name": "other-snake","id": "c35dcf26-7f48-492c-b7b5-94ae78fbc713","health_points": 50,"coords": [[1,0],[1,0],[1,0]] }],"height": 2,"game_id": "a2facef2-b031-44ba-a36c-0859c389ef96","food": [[1,1]],"dead_snakes": [{ "taunt": "gotta go fast","name": "other-snake","id": "83fdf2b9-c8d0-44f4-acb2-0c506139079e","health_points": 50,"coords": [[5,0],[5,0],[5,0]] }] }'
+```
 
-View/stream server logs:
+## Deploying to Heroku
+
+### Create an App
+Next, create an application on Heroku and give it a name that represents your project. This will create a remote git repo for Heroku to use to deploy and run your project.
+```sh
+$ heroku create [APP NAME]
+$ git push heroku master
 ```
-heroku logs --tail
+The output should end with the URL endpoint of your snake. Use this URL to add your snake to a game on the server.
 ```
+remote: -----> Launching...
+remote:        Released v3
+remote:        https://my-snake.herokuapp.com/ deployed to Heroku
+remote:
+remote: Verifying deploy... done.
+```
+
+### Pushing Updates to Heroku
+You have to commit your changes to your git project as part of pushing them to the remote heroku git.
+```sh
+$ git add --all; git commit -m "Updated"; git push
+$ git push heroku master
+```
+
+### Debugging Logs on Heroku
+Once your snake is running, you can tail the logs any time in the console using the command:
+```sh
+$ heroku logs --tail
+```
+
+## Documentation
+
+For more information about using NodeJS on Heroku, see these Dev Center articles:
+
+- [NodeJS on Heroku](https://devcenter.heroku.com/categories/nodejs)

@@ -1,7 +1,5 @@
 {
-  "name": "",
-  "description": "",
-  "repository": "",
-  "logo": "http://node-js-sample.herokuapp.com/node.svg",
-  "keywords": []
+  "name": "BattleSanake on Heroku: NodeJS",
+  "description": "A Simple BattleSnake app using NodeJS, which can easily be deployed to Heroku.",
+  "repository": "https://github.com/xmatters-tko/xm-battlesnake-nodejs.git"
 }
