@@ -62,6 +62,7 @@ $ curl localhost:5000/move -X POST -H "Content-Type: application/json" -d '{ "yo
 
 ### Create an App
 Next, create an application on Heroku and give it a name that represents your project. This will create a remote git repo for Heroku to use to deploy and run your project.
+**NOTE: Name must start with a letter and can only contain lowercase letters, numbers, and dashes.**
 ```sh
 $ heroku create [APP NAME]
 $ git push heroku master
