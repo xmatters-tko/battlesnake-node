@@ -5,7 +5,7 @@ A simple [BattleSnake AI](http://battlesnake.io) written for NodeJS.
 To get started you'll need a working NodeJS development environment, and at least read the Heroku docs on [deploying a NodeJS app](https://devcenter.heroku.com/articles/getting-started-with-nodejs). This client uses [Express4](http://expressjs.com/en/4x/api.html) for easy route management, read up on the docs to learn more about reading incoming JSON params, writing responses, etc.
 
 ## Pre-requisite Accounts
-Every team must show up with a laptop and create the following accounts in order to use the provided start snake. You are welcome to use an existing accounts if you have them already.
+Every team must show up with a laptop and create the following accounts in order to use the provided start snake. You are welcome to use existing accounts if you have them already.
 * Create a free account on Github - https://www.github.com/
 * Create a free account on Heroku - https://www.heroku.com/
 
