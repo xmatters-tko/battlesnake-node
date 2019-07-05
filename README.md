@@ -11,12 +11,12 @@ Every team must show up with a laptop and create the following accounts in order
 
 ## Prerequisite Software
 You'll need the follwing software on your computer before you can get started with this project:
-- [GitHub CLI 2.x](https://git-scm.com/downloads)
-- [Heroku CLI 5.x](https://cli.heroku.com/).
+- [GitHub CLI ](https://git-scm.com/downloads)
+- [Heroku CLI ](https://cli.heroku.com/).
 
 You'll need the following software on your computer if you want to compile and run the application locally. This is completely optional but probably desired since troubleshooting coding errors and testing behaviour will be much easier. 
-- [NodeJs 6.x or 7.x](https://nodejs.org/)
-- [NPM 3.x](https://www.npmjs.com/get-npm) - This is installed with NodeJS
+- [NodeJs 6.x or 7.x or 8.x](https://nodejs.org/)
+- [NPM 3.x or 4.x or 5.x](https://www.npmjs.com/get-npm) - This is installed with NodeJS
 
 If you haven't setup a NodeJS development environment before, read [how to get started with NodeJS](http://nodejs.org/documentation/tutorials/). You'll also need [npm](https://www.npmjs.com/) for easy JS dependency management.
 
