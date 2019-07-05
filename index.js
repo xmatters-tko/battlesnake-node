@@ -20,13 +20,16 @@ app.use(bodyParser.json())
 app.use(routes)
 
 app.use('*',function (req, res, next) {
+  console.log('here');
   if (req.url === '/favicon.ico') {
+    
     // Short-circuit favicon requests
     res.set({'Content-Type': 'image/x-icon'})
     res.status(200)
     res.end()
     next()
   } else {
+    console.log('there');
     // Reroute all 404 routes to the 404 handler
     var err = new Error()
     err.status = 404
@@ -54,7 +57,7 @@ app.use(function (err, req, res, next) {
 // 500 handler middleware, respond with JSON only
 app.use(function (err, req, res, next) {
   var statusCode = err.status || 500
-
+  console.log(err)
   res.status(statusCode)
   res.send({
     status: statusCode,
