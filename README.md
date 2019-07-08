@@ -100,6 +100,20 @@ Once your snake is running, you can tail the logs any time in the console using 
 ```sh
 $ heroku logs --tail
 ```
+### Local Development
+In order to shorten the devlopment cycle, or do step-through debugging, you probably want to develop locally. Firstly, run a game server locally using docker:
+
+$ docker run -it -p 4000:4000 stembolt/battle_snake
+Leave this running and go to http://localhost:4000, you should see a grey screen. Meanwhile, you want to get your snake running locally. 
+Run it locally using heroku command:
+```
+$ heroku local
+```
+
+Now you can try your snake out on your local game server. Since the server is running in a docker container, and your snake is running outside that container, you need to determine your IP address so that the server can talk to your local snake. Maybe use something like ifconfig or check your System Preferences. Once you figure that out, click "New Game" on your game server running at localhost:4000.
+
+You might want a smaller board than 20x20, and a much longer API timeout which will give you time to step-through debug your snake. Enter your snake's location in the Snake's url section using your IP address (e.g. mine is http://10.3.6.123:8080). Play around with the singleplayer / multiplayer Game Mode setting. You can enter multipe versions of your own snake. If you want someone to fight against, my snake is running at https://stk-battlesnake.herokuapp.com
+
 
 ## Documentation
 
