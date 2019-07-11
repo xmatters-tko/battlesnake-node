@@ -26,6 +26,9 @@ router.post('/move', function (req, res) {
    //console.log(req.body)
    let move = findFood(req.body);
    let availableMoves = getAvailableMoves(req.body);
+   console.log("availableMoves: " + availableMoves);
+  
+  
    let taunt = 'Outta my way, snake!';
    if (!availableMoves[move]) {
       taunt = 'Food is too hard to find.';
@@ -56,13 +59,18 @@ function getAvailableMoves(gameState) {
   let maxHeight = gameState.height;
   let maxWidth = gameState.width;
   let occupiedCoords = [];
-  snakes.each(snake => occupiedCoords.concat(snake.coords));
+  gameState.snakes.forEach(snake => {
+    console.log("snake.coords: " + snake.coords);
+    console.log("snake.coords.length: " + snake.coords.length);
+    occupiedCoords = occupiedCoords.concat(snake.coords)
+  });
   
+  console.log("occupiedCoords: " + occupiedCoords);
   return {
-    'left': (headX > 0) && isCoordOccupied(headX - 1, headY, occupiedCoords),
-    'up': (headY > 0) && isCoordOccupied(headX, headY + 1, occupiedCoords),
-    'right': (headX < maxWidth) && isCoordOccupied(headX + 1, headY, occupiedCoords),
-    'down': (headY < maxHeight) && isCoordOccupied(headX, headY + 1, occupiedCoords),
+    'left': (headX > 0) && !isCoordOccupied(headX - 1, headY, occupiedCoords),
+    'up': (headY > 0) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
+    'right': (headX < maxWidth) && !isCoordOccupied(headX + 1, headY, occupiedCoords),
+    'down': (headY < maxHeight) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
   };
 }
 
