@@ -24,24 +24,28 @@ router.post('/move', function (req, res) {
   var moves = {};
   // NOTE: Do something here to generate your move
    //console.log(req.body)
-   let move = findFood(req.body);
    let availableMoves = getAvailableMoves(req.body);
    console.log("availableMoves: " + availableMoves);
+
+   let move = findFood(req.body, availableMoves);
   
   
    let taunt = 'Outta my way, snake!';
-   if (!availableMoves[move]) {
-      taunt = 'Food is too hard to find.';
-      if (availableMoves['up']) {
-        move = 'up';
-      } else if (availableMoves['left']) {
-        move = 'left';
-      } else if (availableMoves['down']) {
-        move = 'down';
-      } else {
-        move = 'right';
-      }
+   if (!move) {
+    taunt = 'goodbye cruel world';
    }
+   // if (!availableMoves[move]) {
+   //    taunt = 'Food is too hard to find.';
+   //    if (availableMoves['up']) {
+   //      move = 'up';
+   //    } else if (availableMoves['left']) {
+   //      move = 'left';
+   //    } else if (availableMoves['down']) {
+   //      move = 'down';
+   //    } else {
+   //      move = 'right';
+   //    }
+   // }
 
   // Response data
   var data = {
@@ -85,23 +89,23 @@ function getSnake(gameState, id){
   let snake = gameState.snakes.find(snake => snake.id === id )
   return snake;
 }
-function findFood(gameState) {
+function findFood(gameState, availableMoves) {
 
   let mySnake = getMySnake(gameState) 
   let head = mySnake.coords[0];
-        if (gameState.food[0][0] < head[0]) {
+        if (gameState.food[0][0] < head[0] && availableMoves['left']) {
             move = "left"
         }
 
-        if (gameState.food[0][0] > head[0]) {
+        if (gameState.food[0][0] > head[0] && availableMoves['right']) {
           move = "right"
         }
 
-        if (gameState.food[0][1] < head[1]) {
+        if (gameState.food[0][1] < head[1] && availableMoves['up']) {
           move = "up"
         }
 
-        if (gameState.food[0][1] > head[1]) {
+        if (gameState.food[0][1] > head[1] && availableMoves['down']) {
           move = "down"
         }
         return move;
