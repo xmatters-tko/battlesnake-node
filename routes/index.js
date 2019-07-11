@@ -1,6 +1,7 @@
 var express = require('express');
 var router  = express.Router();
 
+var snakeCounter = 1;
 
 
 
@@ -11,7 +12,7 @@ router.post('/start', function (req, res) {
   // Response data
   var data = {
     color: "#6a6676",
-    name: "Popped Collars 4 Life",
+    name: "Popped Collars 4 Life" + snakeCounter++,
     head_url: "ttps://upload.wikimedia.org/wikipedia/commons/5/5e/Enl_popped.jpg", // optional, but encouraged!
     taunt: "You don't know me!", // optional, but encouraged!
   }
@@ -24,8 +25,12 @@ router.post('/move', function (req, res) {
   var moves = {};
   // NOTE: Do something here to generate your move
    //console.log(req.body)
-   let availableMoves = getAvailableMoves(req.body);
-   console.log("availableMoves: " + availableMoves);
+   
+   var gameState = req.body;
+   let mySnake = getMySnake(gameState);
+   console.log("Turn for " + mySnake.name + ": " + gameState.turn);
+   let availableMoves = getAvailableMoves(gameState);
+   console.log("availableMoves: " + JSON.stringify(availableMoves));
 
    let move = findFood(req.body, availableMoves);
   
@@ -64,18 +69,18 @@ function getAvailableMoves(gameState) {
   let maxHeight = gameState.height;
   let maxWidth = gameState.width;
   let occupiedCoords = [];
+  console.log("mySnake.coords: " + JSON.stringify(mySnake.coords));
   gameState.snakes.forEach(snake => {
-    console.log("snake.coords: " + snake.coords);
-    console.log("snake.coords.length: " + snake.coords.length);
+    //ßconsole.log("snake.coords: " + JSON.stringify(snake.coords));
     occupiedCoords = occupiedCoords.concat(snake.coords)
   });
   
-  console.log("occupiedCoords: " + occupiedCoords);
+  //console.log("occupiedCoords: " + JSON.stringify(occupiedCoords));
   return {
     'left': (headX > 0) && !isCoordOccupied(headX - 1, headY, occupiedCoords),
-    'up': (headY > 0) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
-    'right': (headX < maxWidth) && !isCoordOccupied(headX + 1, headY, occupiedCoords),
-    'down': (headY < maxHeight) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
+    'up': (headY > 0) && !isCoordOccupied(headX, headY - 1, occupiedCoords),
+    'right': (headX < maxWidth - 1) && !isCoordOccupied(headX + 1, headY, occupiedCoords),
+    'down': (headY < maxHeight - 1) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
   };
 }
 
