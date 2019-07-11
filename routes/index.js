@@ -48,7 +48,7 @@ router.post('/move', function (req, res) {
     mode = BR_MODE;
    }
 
-   let availableMoves = getAvailableMoves(gameState);
+   let availableMoves = getMyAvailableMoves(gameState);
    console.log("availableMoves: " + JSON.stringify(availableMoves));
 
    let foodTarget = gameState.food[0];
@@ -57,6 +57,22 @@ router.post('/move', function (req, res) {
     if (mySnake.coords.length > opponent.coords.length) {
       taunt = 'You look like food, ' + opponent.name;
       foodTarget = opponent.coords[0];
+      var opponentMoves = getAvailableMoves(gameState, opponent);
+      if (opponentMoves['up']) {
+        foodTarget = getNewCoords(opponent.coords, 'up');
+        taunt += ' and I think you are going up.';
+      } else if (opponentMoves['left']) {
+        foodTarget = getNewCoords(opponent.coords, 'left');
+        taunt += ' and I think you are going left.';
+      } else if (opponentMoves['down']) {
+        foodTarget = getNewCoords(opponent.coords, 'down');
+        taunt += ' and I think you are going down.';
+      } else if (opponentMoves['right']) {
+        foodTarget = getNewCoords(opponent.coords, 'right');
+        taunt += ' and I think you are going right.';
+      } else {
+        taunt += ' and I think you are doomed.';
+      }
     }
    }
 
@@ -88,16 +104,34 @@ router.post('/move', function (req, res) {
   return res.json(data)
 });
 
-function getAvailableMoves(gameState) {
+function getNewCoords(oldCoords, direction) {
+    var newCoords = [].concat(oldCoords);
+    if (direction === 'up') {
+      newCoords[1] = newCoords[1] - 1;
+    } else if (direction === 'left') {
+      newCoords[0] = newCoords[0] - 1;
+    } else if (direction === 'down') {
+      newCoords[1] = newCoords[1] + 1;
+    } else if (direction === 'right') {
+      newCoords[0] = newCoords[0] + 1;
+    }
+    return newCoords;
+}
+
+function getMyAvailableMoves(gameState) {
   let mySnake = getMySnake(gameState);
-  let headX = mySnake.coords[0][0];
-  let headY = mySnake.coords[0][1];
+  return getAvailableMoves(gameState, mySnake);
+}
+
+function getAvailableMoves(gameState, snake) {
+  let headX = snake.coords[0];
+  let headY = snake.coords[1];
   let maxHeight = gameState.height;
   let maxWidth = gameState.width;
   let occupiedCoords = [];
-  console.log("mySnake.coords: " + JSON.stringify(mySnake.coords));
+  console.log("snake.coords: " + JSON.stringify(snake.coords));
   gameState.snakes.forEach(snake => {
-    //ßconsole.log("snake.coords: " + JSON.stringify(snake.coords));
+    //console.log("snake.coords: " + JSON.stringify(snake.coords));
     occupiedCoords = occupiedCoords.concat(snake.coords)
   });
   
