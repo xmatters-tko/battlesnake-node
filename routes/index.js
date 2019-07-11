@@ -7,10 +7,10 @@ router.post('/start', function (req, res) {
  console.log(req.body)
   // Response data
   var data = {
-    color: "#DFFF00",
-    name: "ContraSnake",
-    head_url: "http://www.placecage.com/c/200/200", // optional, but encouraged!
-    taunt: "I won't run into walls and i am made of javascript", // optional, but encouraged!
+    color: "#6a6676",
+    name: "Popped Collars 4 Life",
+    head_url: "ttps://upload.wikimedia.org/wikipedia/commons/5/5e/Enl_popped.jpg", // optional, but encouraged!
+    taunt: "You don't know me!", // optional, but encouraged!
   }
 
   return res.json(data)
