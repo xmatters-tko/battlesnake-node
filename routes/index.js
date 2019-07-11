@@ -31,21 +31,22 @@ router.post('/move', function (req, res) {
   
   
    let taunt = 'Outta my way, snake!';
+   if (!availableMoves[move]) {
+      taunt = 'Food is too hard to find.';
+      if (availableMoves['up']) {
+        move = 'up';
+      } else if (availableMoves['left']) {
+        move = 'left';
+      } else if (availableMoves['down']) {
+        move = 'down';
+      } else if (availableMoves['right']) {
+        move = 'right';
+      }
+   }
    if (!move) {
+    move = 'up';
     taunt = 'goodbye cruel world';
    }
-   // if (!availableMoves[move]) {
-   //    taunt = 'Food is too hard to find.';
-   //    if (availableMoves['up']) {
-   //      move = 'up';
-   //    } else if (availableMoves['left']) {
-   //      move = 'left';
-   //    } else if (availableMoves['down']) {
-   //      move = 'down';
-   //    } else {
-   //      move = 'right';
-   //    }
-   // }
 
   // Response data
   var data = {
