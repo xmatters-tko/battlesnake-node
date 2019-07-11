@@ -23,6 +23,24 @@ router.post('/start', function (req, res) {
   return res.json(data)
 })
 
+function isNextWall(intendedMove, mySnake, body) {
+    //if()
+    return false;
+}
+
+let moves = ['left','up','down','right'];
+
+function randomMove(exclude) {
+    let move = moves[getRandomInt(4)];
+    if (move === exclude) {
+        randomMove(exclude);
+    }
+}
+
+function getCheckMove() {
+
+}
+
 // Handle POST request to '/move'
 router.post('/move', function (req, res) {
   console.log(req.body);
@@ -32,6 +50,10 @@ router.post('/move', function (req, res) {
    // TODO implement function that runs all validation functions here.
    const { moveAllowed, oppositeDirection } = isSelfThere(mySnake, intendedMove);
    move = moveAllowed ? intendedMove : oppositeDirection;
+
+   if (isNextWall(intendedMove,mySnake,req.body)) {
+
+   }
 
   // Response data
   var data = {
