@@ -75,6 +75,10 @@ router.post('/move', function (req, res) {
           taunt += ' and I think you are doomed.';
         }
       }
+
+    if (isSnakeBigger(mySnake, opponent)) {
+      taunt = 'You look like food, ' + opponent.name;
+      foodTarget = opponent.coords[0];
     }
    }
 
@@ -128,6 +132,25 @@ function getMyAvailableMoves(gameState) {
 function getAvailableMoves(gameState, snake) {
   let headX = snake.coords[0][0];
   let headY = snake.coords[0][1];
+
+function isCoordSafe(x, y, occupiedCoords, mySnake, otherSnakes) {
+    return !isCoordOccupied(x, y, occupiedCoords) && !isCoordThreatened(x, y, mySnake, otherSnakes);
+};
+
+//returns true if-f a snake head is adjacent to the coord [x,y]
+function isCoordThreatened(x, y, mySnake, otherSnakes) {
+    return otherSnakes.find(sn => isSnakeBigger(sn, mySnake) && isAdjacent(x, y, sn.coords[0][0], sn.coords[0][1]));
+}
+
+function isAdjacent(x1, y1, x2, y2) {
+    return Math.abs(x1 - x2) <= 1 && Math.abs((y1 - y2) <= 1);
+}
+
+function getAvailableMoves(gameState) {
+  let mySnake = getMySnake(gameState);
+  let otherSnakes = getAllOtherSnakes(gameState);
+  let headX = mySnake.coords[0][0];
+  let headY = mySnake.coords[0][1];
   let maxHeight = gameState.height;
   let maxWidth = gameState.width;
   let occupiedCoords = [];
@@ -141,10 +164,10 @@ function getAvailableMoves(gameState, snake) {
   
   console.log("occupiedCoords: " + JSON.stringify(occupiedCoords));
   return {
-    'left': (headX > 0) && !isCoordOccupied(headX - 1, headY, occupiedCoords),
-    'up': (headY > 0) && !isCoordOccupied(headX, headY - 1, occupiedCoords),
-    'right': (headX < maxWidth - 1) && !isCoordOccupied(headX + 1, headY, occupiedCoords),
-    'down': (headY < maxHeight - 1) && !isCoordOccupied(headX, headY + 1, occupiedCoords),
+    'left': (headX > 0) && isCoordSafe(headX - 1, headY, occupiedCoords, mySnake, otherSnakes),
+    'up': (headY > 0) && isCoordSafe(headX, headY - 1, occupiedCoords, mySnake, otherSnakeHeads),
+    'right': (headX < maxWidth - 1) && isCoordSafe(headX + 1, headY, occupiedCoords, mySnake, otherSnakes),
+    'down': (headY < maxHeight - 1) && isCoordSafe(headX, headY + 1, occupiedCoords, mySnake, otherSnakes),
   };
 }
 
@@ -156,11 +179,16 @@ function getMySnake(gameState){
   return getSnake(gameState,gameState.you)
 }
 
+function getAllOtherSnakes(gameState) {
+    const myId = gameState.you;
+    return gameState.snakes.filter(snake => snake.id !== myId);
+}
+
 function getOtherSnake(gameState){
   const myId = gameState.you;
   let snake = gameState.snakes.find(snake => snake.id !== myId )
   return snake;
-  }
+}
 
 function getSnake(gameState, id){
   let snake = gameState.snakes.find(snake => snake.id === id )
