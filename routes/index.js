@@ -165,7 +165,7 @@ function getAvailableMoves(gameState) {
   console.log("occupiedCoords: " + JSON.stringify(occupiedCoords));
   return {
     'left': (headX > 0) && isCoordSafe(headX - 1, headY, occupiedCoords, mySnake, otherSnakes),
-    'up': (headY > 0) && isCoordSafe(headX, headY - 1, occupiedCoords, mySnake, otherSnakeHeads),
+    'up': (headY > 0) && isCoordSafe(headX, headY - 1, occupiedCoords, mySnake, otherSnakes),
     'right': (headX < maxWidth - 1) && isCoordSafe(headX + 1, headY, occupiedCoords, mySnake, otherSnakes),
     'down': (headY < maxHeight - 1) && isCoordSafe(headX, headY + 1, occupiedCoords, mySnake, otherSnakes),
   };
