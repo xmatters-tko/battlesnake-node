@@ -14,7 +14,7 @@ router.post('/start', function (req, res) {
  console.log(req.body)
   // Response data
   var data = {
-    color: "#6a6676",
+    color: "#006676",
     name: "Popped Collars 4 Life" + snakeCounter++,
     head_url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Enl_popped.jpg", // optional, but encouraged!
     taunt: "You don't know me!", // optional, but encouraged!
@@ -48,15 +48,33 @@ router.post('/move', function (req, res) {
     mode = BR_MODE;
    }
 
-   let availableMoves = getAvailableMoves(gameState);
+   let availableMoves = getMyAvailableMoves(gameState);
    console.log("availableMoves: " + JSON.stringify(availableMoves));
 
    let foodTarget = gameState.food[0];
    if (H2H_MODE) {
     var opponent = getOtherSnake(gameState);
-    if (mySnake.coords.length > opponent.coords.length) {
-      taunt = 'You look like food, ' + opponent.name;
-      foodTarget = opponent.coords[0];
+    if (opponent) {
+      if (mySnake.coords.length > opponent.coords.length) {
+        taunt = 'You look like food, ' + opponent.name;
+        foodTarget = opponent.coords[0];
+        var opponentMoves = getAvailableMoves(gameState, opponent);
+        if (opponentMoves['up']) {
+          foodTarget = getNewCoords(opponent.coords, 'up');
+          taunt += ' and I think you are going up.';
+        } else if (opponentMoves['left']) {
+          foodTarget = getNewCoords(opponent.coords, 'left');
+          taunt += ' and I think you are going left.';
+        } else if (opponentMoves['down']) {
+          foodTarget = getNewCoords(opponent.coords, 'down');
+          taunt += ' and I think you are going down.';
+        } else if (opponentMoves['right']) {
+          foodTarget = getNewCoords(opponent.coords, 'right');
+          taunt += ' and I think you are going right.';
+        } else {
+          taunt += ' and I think you are doomed.';
+        }
+      }
     }
    }
 
@@ -88,20 +106,40 @@ router.post('/move', function (req, res) {
   return res.json(data)
 });
 
-function getAvailableMoves(gameState) {
+function getNewCoords(oldCoords, direction) {
+    var newCoords = [].concat(oldCoords);
+    if (direction === 'up') {
+      newCoords[1] = newCoords[1] - 1;
+    } else if (direction === 'left') {
+      newCoords[0] = newCoords[0] - 1;
+    } else if (direction === 'down') {
+      newCoords[1] = newCoords[1] + 1;
+    } else if (direction === 'right') {
+      newCoords[0] = newCoords[0] + 1;
+    }
+    return newCoords;
+}
+
+function getMyAvailableMoves(gameState) {
   let mySnake = getMySnake(gameState);
-  let headX = mySnake.coords[0][0];
-  let headY = mySnake.coords[0][1];
+  return getAvailableMoves(gameState, mySnake);
+}
+
+function getAvailableMoves(gameState, snake) {
+  let headX = snake.coords[0][0];
+  let headY = snake.coords[0][1];
   let maxHeight = gameState.height;
   let maxWidth = gameState.width;
   let occupiedCoords = [];
-  console.log("mySnake.coords: " + JSON.stringify(mySnake.coords));
-  gameState.snakes.forEach(snake => {
-    //ßconsole.log("snake.coords: " + JSON.stringify(snake.coords));
-    occupiedCoords = occupiedCoords.concat(snake.coords)
+  console.log("headX: " + headX);
+  console.log("headY: " + headY);
+  console.log("input snake.coords: " + JSON.stringify(snake.coords));
+  gameState.snakes.forEach(s => {
+    console.log("snake.coords: " + JSON.stringify(s.coords));
+    occupiedCoords = occupiedCoords.concat(s.coords)
   });
   
-  //console.log("occupiedCoords: " + JSON.stringify(occupiedCoords));
+  console.log("occupiedCoords: " + JSON.stringify(occupiedCoords));
   return {
     'left': (headX > 0) && !isCoordOccupied(headX - 1, headY, occupiedCoords),
     'up': (headY > 0) && !isCoordOccupied(headX, headY - 1, occupiedCoords),
@@ -132,6 +170,9 @@ function findPathTo(gameState, foodTargetCoords, availableMoves) {
 
   let mySnake = getMySnake(gameState) 
   let head = mySnake.coords[0];
+  console.log("foodTargetCoords[0]: " + foodTargetCoords[0]);
+  console.log("availableMoves: " + JSON.stringify(availableMoves));
+  var move;
   if (foodTargetCoords[0] < head[0] && availableMoves['left']) {
       move = "left"
   }
