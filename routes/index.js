@@ -16,7 +16,7 @@ router.post('/start', function (req, res) {
   var data = {
     color: "#6a6676",
     name: "Popped Collars 4 Life" + snakeCounter++,
-    head_url: "ttps://upload.wikimedia.org/wikipedia/commons/5/5e/Enl_popped.jpg", // optional, but encouraged!
+    head_url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Enl_popped.jpg", // optional, but encouraged!
     taunt: "You don't know me!", // optional, but encouraged!
   }
 
