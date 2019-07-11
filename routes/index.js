@@ -1,5 +1,10 @@
-var express = require('express')
-var router  = express.Router()
+var express = require('express');
+var router  = express.Router();
+
+const LEFT = 'left';
+const RIGHT = 'right';
+const UP = 'up';
+const DOWN = 'down';
 
 // Handle POST request to '/start'
 router.post('/start', function (req, res) {
@@ -24,6 +29,9 @@ router.post('/move', function (req, res) {
   const mySnake = getMySnake(gameState);
    let move = '';
    const intendedMove = findFood(mySnake, req.body);
+   // TODO implement function that runs all validation functions here.
+   const { moveAllowed, oppositeDirection } = isSelfThere(mySnake, intendedMove);
+   move = moveAllowed ? intendedMove : oppositeDirection;
 
   // Response data
   var data = {
@@ -43,28 +51,71 @@ function getSnake(gameState, id){
 function findFood(mySnake, gameState) {
   let head = mySnake.coords[0];
         if (gameState.food[0][0] < head[0]) {
-            move = "left"
+            move = LEFT;
         }
 
         if (gameState.food[0][0] > head[0]) {
-          move = "right"
+          move = RIGHT;
         }
 
         if (gameState.food[0][1] < head[1]) {
-          move = "up"
+          move = UP;
         }
 
         if (gameState.food[0][1] > head[1]) {
-          move = "down"
+          move = DOWN;
         }
         return move ;
 }
 
 function isSelfThere(mySnake, intendedMove) {
-  const head = mySnake.coords[0];
-
-
+  let moveAllowed = true;
+  let oppositeDirection = '';
+  const body = mySnake.coords;
+  const head = body[0];
+  let destinationCoord;
+  switch (intendedMove) {
+    case LEFT:
+      destinationCoord = [(head[0] - 1), head[1]];
+      const [destX, destY] = destinationCoord;
+      body.forEach(part => {
+        const [partX, partY] = part;
+        if (destX === partX && destY === partY) {
+          moveAllowed = false;
+          oppositeDirection = RIGHT;
+        }
+      });
+      break;
+    case RIGHT:
+      destinationCoord = [(head[0] + 1), head[1]];
+      const [destX, destY] = destinationCoord;
+      if (destX === partX && destY === partY) {
+        moveAllowed = false;
+        oppositeDirection = LEFT;
+      }
+      break;
+    case UP:
+      destinationCoord = [head[0], (head[1] + 1)];
+      const [destX, destY] = destinationCoord;
+      if (destX === partX && destY === partY) {
+        moveAllowed = false;
+        oppositeDirection = DOWN;
+      }
+      break;
+    case DOWN:
+      destinationCoord = [head[0], (head[1] - 1)];
+      const [destX, destY] = destinationCoord;
+      if (destX === partX && destY === partY) {
+        moveAllowed = false;
+        oppositeDirection = UP;
+      }
+      break;
+    default:
+      break;
+  }
+  return { moveAllowed, oppositeDirection };
 }
+
 
 
 module.exports = router
